@@ -2,7 +2,7 @@ package com.stormwarn.game.desktop;
 
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
-import com.stormwarn.game.StormWarn;
+import com.stormwarn.game.main.StormWarn;
 
 public class DesktopLauncher {
 	public static void main (String[] arg) {

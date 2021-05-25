@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.PolygonRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.ScreenUtils;
+import com.stormwarn.game.graphics.MyCamera;
 import com.stormwarn.game.main.StormWarn;
 import com.stormwarn.game.radar.Radar;
 
@@ -15,7 +16,7 @@ public class GameScreen implements Screen {
 
     final StormWarn game;
 
-    private OrthographicCamera camera;
+    private MyCamera camera;
 
     private Radar radar;
 
@@ -32,7 +33,7 @@ public class GameScreen implements Screen {
     public GameScreen(StormWarn game) {
         this.game = game;
 
-        camera = new OrthographicCamera();
+        camera = MyCamera.getInstance();
         camera.setToOrtho(false, 1600, 960);
 
         radar = new Radar();
@@ -54,13 +55,16 @@ public class GameScreen implements Screen {
     public void render(float delta) {
         ScreenUtils.clear(0, 0, 0, 1);
 
-        camera.position.set(0, 0, 0);
-        camera.zoom = 1f;
+        camera.setXpos(0);
+        camera.setYpos(0);
+        camera.setZpos(0);
+        camera.setZoom(0.5f);
         camera.update();
 
         //game logic here
         populateCellsRandomly();
 
+        game.shapeRenderer.setProjectionMatrix(camera.combined);
         //filled in shapes
         game.shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
         drawRadar();
@@ -113,6 +117,7 @@ public class GameScreen implements Screen {
         }
     }
 
+
     private void drawRadar() {
         int centerX = Gdx.graphics.getWidth() / 2;
         int centerY = Gdx.graphics.getHeight() / 2;
@@ -128,17 +133,17 @@ public class GameScreen implements Screen {
                 float xpos = (float) getXPos(rpos, dpos);
                 float ypos = (float) getYPos(rpos, dpos);
 
-                vertices[0] = xpos + centerX;
-                vertices[1] = ypos + centerY;
+                vertices[0] = xpos;
+                vertices[1] = ypos;
 
-                vertices[2] = (float) getXPos(rpos + cellWidth, dpos) + centerX;
-                vertices[3] = (float) getYPos(rpos + cellWidth, dpos) + centerY;
+                vertices[2] = (float) getXPos(rpos + cellWidth, dpos);
+                vertices[3] = (float) getYPos(rpos + cellWidth, dpos);
 
-                vertices[4] = (float) getXPos(rpos + cellWidth, dpos + cellHeight) + centerX;
-                vertices[5] = (float) getYPos(rpos + cellWidth, dpos + cellHeight) + centerY;
+                vertices[4] = (float) getXPos(rpos + cellWidth, dpos + cellHeight);
+                vertices[5] = (float) getYPos(rpos + cellWidth, dpos + cellHeight);
 
-                vertices[6] = (float) getXPos(rpos, dpos + cellHeight) + centerX;
-                vertices[7] = (float) getYPos(rpos, dpos + cellHeight) + centerY;
+                vertices[6] = (float) getXPos(rpos, dpos + cellHeight);
+                vertices[7] = (float) getYPos(rpos, dpos + cellHeight);
 
                 if (r > 0 && r <= 6 && checkVisible((int) xpos, (int) ypos)) {
                     game.shapeRenderer.setColor(setColor(r));
@@ -147,10 +152,6 @@ public class GameScreen implements Screen {
                 }
             }
         }
-    }
-
-    private void setRadarCells() {
-
     }
 
     /**
@@ -177,54 +178,8 @@ public class GameScreen implements Screen {
         return ypos;
     }
 
-    private short[] defaultTriangles() {
-        return new short[]{
-                0, 1, 2,
-                0, 2, 3
-        };
-    }
-
     private boolean checkVisible(int x, int y) {
         return camera.frustum.pointInFrustum(x, y, 0);
-    }
-
-    private Texture solidTexture(int color) {
-        Pixmap pix = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
-        switch(color) {
-            case 0: {
-                pix.setColor(Color.WHITE);
-                break;
-            }
-            case 1: {
-                pix.setColor(Color.RED);
-                break;
-            }
-            case 2: {
-                pix.setColor(Color.ORANGE);
-                break;
-            }
-            case 3: {
-                pix.setColor(Color.YELLOW);
-                break;
-            }
-            case 4: {
-                pix.setColor(Color.GREEN);
-                break;
-            }
-            case 5: {
-                pix.setColor(Color.BLUE);
-                break;
-            }
-            case 6: {
-                pix.setColor(Color.PURPLE);
-                break;
-            } default: {
-                pix.setColor(Color.BLACK);
-                break;
-            }
-        }
-        pix.fill();
-        return new Texture(pix);
     }
 
     private Color setColor(int color) {
@@ -255,7 +210,4 @@ public class GameScreen implements Screen {
             }
         }
     }
-
-
-
 }

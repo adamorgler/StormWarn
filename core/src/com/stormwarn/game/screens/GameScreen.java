@@ -9,6 +9,7 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import com.stormwarn.game.graphics.MyCamera;
 import com.stormwarn.game.main.StormWarn;
 import com.stormwarn.game.radar.Radar;
+import com.stormwarn.game.radar.RadarCell;
 
 import java.util.Random;
 
@@ -20,7 +21,7 @@ public class GameScreen implements Screen {
 
     private Radar radar;
 
-    private int[][] radarCells;
+    private RadarCell[][] radarCells;
 
     private PolygonRegion[][] radarPolygons;
 
@@ -41,8 +42,8 @@ public class GameScreen implements Screen {
         cellHeight = 2;
         deadZoneOffset = 5 * cellHeight;
 
-        radarCells = new int[radar.getRadialAmount()][radar.getDistance()];
-        populateCellsRandomly();
+
+        radarCells = radar.getRadarCells();
         radarPolygons = new PolygonRegion[radar.getRadialAmount()][radar.getDistance()];
     }
 
@@ -112,7 +113,7 @@ public class GameScreen implements Screen {
         Random rand = new Random();
         for(int i = 0; i < radarCells.length; i++) {
             for (int j = 0; j < radarCells[i].length; j++) {
-                radarCells[i][j] = rand.nextInt(12);
+                radarCells[i][j].setReflectivity(rand.nextInt(12));
             }
         }
     }
@@ -124,7 +125,7 @@ public class GameScreen implements Screen {
 
         for (int i = 0; i < radarCells.length; i++) {
             for (int j = 0; j < radarCells[i].length; j++) {
-                int r = radarCells[i][j];
+                int r = radarCells[i][j].getReflectivity();
                 int rpos = i;
                 int dpos = (j * cellHeight) + deadZoneOffset;
 

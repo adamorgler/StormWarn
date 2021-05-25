@@ -58,7 +58,7 @@ public class GameScreen implements Screen {
         camera.setXpos(0);
         camera.setYpos(0);
         camera.setZpos(0);
-        camera.setZoom(0.5f);
+        camera.setZoom(1f);
         camera.update();
 
         //game logic here
@@ -73,8 +73,8 @@ public class GameScreen implements Screen {
         //outlines
         game.shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
         game.shapeRenderer.setColor(Color.LIGHT_GRAY);
-        game.shapeRenderer.circle(Gdx.graphics.getWidth() / 2,
-                Gdx.graphics.getHeight() / 2,
+        game.shapeRenderer.circle(0,
+                0,
                 (radar.getDistance() * cellHeight) + deadZoneOffset);
         game.shapeRenderer.end();
 

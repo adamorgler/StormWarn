@@ -2,20 +2,20 @@ package com.stormwarn.game.main;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.PolygonSpriteBatch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.stormwarn.game.screens.MainMenuScreen;
 
 public class StormWarn extends Game {
 
     public SpriteBatch batch;
-    public PolygonSpriteBatch polyBatch;
+    public ShapeRenderer shapeRenderer;
     public BitmapFont font;
 
     @Override
     public void create() {
         batch = new SpriteBatch();
-        polyBatch = new PolygonSpriteBatch();
+        shapeRenderer = new ShapeRenderer();
         font = new BitmapFont();
         this.setScreen(new MainMenuScreen(this));
     }
@@ -26,7 +26,7 @@ public class StormWarn extends Game {
 
     public void dispose() {
         batch.dispose();
-        polyBatch.dispose();
+        shapeRenderer.dispose();
         font.dispose();
     }
 

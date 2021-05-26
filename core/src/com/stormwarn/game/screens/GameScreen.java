@@ -119,39 +119,46 @@ public class GameScreen implements Screen {
 
 
     private void drawRadar() {
-        int centerX = Gdx.graphics.getWidth() / 2;
-        int centerY = Gdx.graphics.getHeight() / 2;
-
         for (int i = 0; i < radarCells.length; i++) {
             for (int j = 0; j < radarCells[i].length; j++) {
                 int r = radarCells[i][j];
                 int rpos = i;
                 int dpos = (j * cellHeight) + deadZoneOffset;
 
-                float[] vertices = new float[8];
-
                 float xpos = (float) getXPos(rpos, dpos);
                 float ypos = (float) getYPos(rpos, dpos);
 
-                vertices[0] = xpos;
-                vertices[1] = ypos;
-
-                vertices[2] = (float) getXPos(rpos + cellWidth, dpos);
-                vertices[3] = (float) getYPos(rpos + cellWidth, dpos);
-
-                vertices[4] = (float) getXPos(rpos + cellWidth, dpos + cellHeight);
-                vertices[5] = (float) getYPos(rpos + cellWidth, dpos + cellHeight);
-
-                vertices[6] = (float) getXPos(rpos, dpos + cellHeight);
-                vertices[7] = (float) getYPos(rpos, dpos + cellHeight);
+                float[] vertices = genPolyVertices(rpos, dpos);
 
                 if (r > 0 && r <= 6 && checkVisible((int) xpos, (int) ypos)) {
                     game.shapeRenderer.setColor(setColor(r));
-                    game.shapeRenderer.triangle(vertices[0], vertices[1], vertices[4], vertices[5], vertices[2], vertices[3]);
-                    game.shapeRenderer.triangle(vertices[0], vertices[1], vertices[4], vertices[5], vertices[6], vertices[7]);
+                    game.shapeRenderer.triangle(vertices[0], vertices[1],
+                            vertices[4], vertices[5],
+                            vertices[2], vertices[3]);
+                    game.shapeRenderer.triangle(vertices[0], vertices[1],
+                            vertices[4], vertices[5],
+                            vertices[6], vertices[7]);
                 }
             }
         }
+    }
+
+    private float[] genPolyVertices(int rpos, int dpos) {
+        float[] vertices = new float[8];
+
+        vertices[0] = (float) getXPos(rpos, dpos);
+        vertices[1] = (float) getYPos(rpos, dpos);
+
+        vertices[2] = (float) getXPos(rpos + cellWidth, dpos);
+        vertices[3] = (float) getYPos(rpos + cellWidth, dpos);
+
+        vertices[4] = (float) getXPos(rpos + cellWidth, dpos + cellHeight);
+        vertices[5] = (float) getYPos(rpos + cellWidth, dpos + cellHeight);
+
+        vertices[6] = (float) getXPos(rpos, dpos + cellHeight);
+        vertices[7] = (float) getYPos(rpos, dpos + cellHeight);
+
+        return vertices;
     }
 
     /**

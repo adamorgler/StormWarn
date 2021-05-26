@@ -1,4 +1,7 @@
-package com.stormwarn.game.enviornment;
+package com.stormwarn.game.controllers;
+
+import com.stormwarn.game.enviornment.Environment;
+import com.stormwarn.game.storm.partitions.StormCell;
 
 import java.util.ArrayList;
 
@@ -11,7 +14,9 @@ public class EnvController {
     private ArrayList<StormCell> cells;
 
     public EnvController() {
+
         environment = Environment.getInstance(60, 60, 15);
+        cells = new ArrayList<StormCell>();
     }
 
     public static EnvController getInstance() {
@@ -20,4 +25,10 @@ public class EnvController {
         }
         return instance;
     }
+
+    public void genCell() {
+        StormCell s = new StormCell(cells.size());
+        cells.add(s);
+    }
+
 }

@@ -1,4 +1,4 @@
-package com.stormwarn.game.enviornment;
+package com.stormwarn.game.storm.partitions;
 
 public class StormCell {
 

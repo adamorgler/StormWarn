@@ -2,6 +2,10 @@ package com.stormwarn.game.radar;
 
 public class RadarCell {
 
+    private int rPos;
+
+    private int dPos;
+
     /**
      * Active when precipitation is present
      */
@@ -17,10 +21,12 @@ public class RadarCell {
      */
     private int velocity;
 
-    public RadarCell() {
+    public RadarCell(int rPos, int dPos) {
         this.isActive = false;
         this.reflectivity = 0;
         this.velocity = 0;
+        this.rPos = rPos;
+        this.dPos = dPos;
     }
 
     public boolean isActive() {
@@ -56,5 +62,21 @@ public class RadarCell {
         } else {
             setActive(false);
         }
+    }
+
+    public int getrPos() {
+        return rPos;
+    }
+
+    public void setrPos(int rPos) {
+        this.rPos = rPos;
+    }
+
+    public int getdPos() {
+        return dPos;
+    }
+
+    public void setdPos(int dPos) {
+        this.dPos = dPos;
     }
 }

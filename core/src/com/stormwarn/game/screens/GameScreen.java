@@ -42,7 +42,6 @@ public class GameScreen implements Screen {
         cellHeight = 2;
         deadZoneOffset = 5 * cellHeight;
 
-
         radarCells = radar.getRadarCells();
         radarPolygons = new PolygonRegion[radar.getRadialAmount()][radar.getDistance()];
     }
@@ -63,7 +62,7 @@ public class GameScreen implements Screen {
         camera.update();
 
         //game logic here
-        populateCellsRandomly();
+        drawCircle(249, 0, 5);
 
         game.shapeRenderer.setProjectionMatrix(camera.combined);
         //filled in shapes
@@ -116,6 +115,10 @@ public class GameScreen implements Screen {
                 radarCells[i][j].setReflectivity(rand.nextInt(12));
             }
         }
+    }
+
+    private void drawCircle(float xc, float yc, float r) {
+        radar.detectCircle(xc, yc, r);
     }
 
 

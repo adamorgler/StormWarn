@@ -6,19 +6,29 @@ public class MyCamera extends OrthographicCamera {
 
     private static MyCamera instance;
 
-    private float xpos;
+    private float xPos;
 
-    private float ypos;
+    private float yPos;
 
-    private float zpos;
+    private float zPos;
+
+    private float xBound;
+
+    private float yBound;
+
+    private float zoomLowerBound;
+
+    private float zoomUpperBound;
 
     public MyCamera() {
         this.zoom = 1f;
-        this.xpos = 0f;
-        this.ypos = 0f;
-        this.zpos = 0f;
+        this.xPos = 0f;
+        this.yPos = 0f;
+        this.zPos = 0f;
+        this.zoomLowerBound = 0.1f;
+        this.zoomUpperBound = 2f;
 
-        this.position.set(xpos, ypos, zpos);
+        this.position.set(xPos, yPos, zPos);
     }
 
     public static MyCamera getInstance() {
@@ -28,31 +38,49 @@ public class MyCamera extends OrthographicCamera {
         return instance;
     }
 
-    public float getXpos() {
-        return xpos;
+    public float getxPos() {
+        return xPos;
     }
 
-    public void setXpos(float xpos) {
-        this.xpos = xpos;
-        this.position.set(xpos, ypos, zpos);
+    public void setxPos(float xPos) {
+        if (xPos < -xBound) {
+            xPos = -xBound;
+        } else if (xPos > xBound) {
+            xPos = xBound;
+        }
+        this.xPos = xPos;
+        this.position.set(xPos, yPos, zPos);
     }
 
-    public float getYpos() {
-        return ypos;
+    public void moveXPos(float a) {
+        setxPos(getxPos() + a);
     }
 
-    public void setYpos(float ypos) {
-        this.ypos = ypos;
-        this.position.set(xpos, ypos, zpos);
+    public float getyPos() {
+        return yPos;
     }
 
-    public float getZpos() {
-        return zpos;
+    public void setyPos(float yPos) {
+        if (yPos < -yBound) {
+            yPos = -yBound;
+        } else if (yPos > yBound) {
+            yPos = yBound;
+        }
+        this.yPos = yPos;
+        this.position.set(xPos, yPos, zPos);
     }
 
-    public void setZpos(float zpos) {
-        this.zpos = zpos;
-        this.position.set(xpos, ypos, zpos);
+    public void moveYPos(float a) {
+        setyPos(getyPos() + a);
+    }
+
+
+    public void setzPos(float zPos) {
+        //nothing
+    }
+
+    public float getzPos() {
+        return zPos;
     }
 
     public float getZoom() {
@@ -60,8 +88,20 @@ public class MyCamera extends OrthographicCamera {
     }
 
     public void setZoom(float zoom) {
-        if (zoom <= 2 && zoom >= 0.1) {
+        if (zoom <= zoomUpperBound && zoom >= zoomLowerBound) {
             this.zoom = zoom;
         }
+    }
+
+    public void moveZoom(float a) {
+        setZoom(getZoom() + a);
+    }
+
+    public void setxBound() {
+        this.xBound = viewportWidth / 2;
+    }
+
+    public void setyBound() {
+        this.yBound = viewportHeight / 2;
     }
 }

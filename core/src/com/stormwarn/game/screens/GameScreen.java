@@ -1,11 +1,13 @@
 package com.stormwarn.game.screens;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.PolygonRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.ScreenUtils;
+import com.stormwarn.game.controllers.EnvController;
 import com.stormwarn.game.graphics.MyCamera;
 import com.stormwarn.game.main.StormWarn;
 import com.stormwarn.game.radar.Radar;
@@ -16,6 +18,8 @@ import java.util.Random;
 public class GameScreen implements Screen {
 
     final StormWarn game;
+
+    final EnvController envController;
 
     private MyCamera camera;
 
@@ -33,9 +37,16 @@ public class GameScreen implements Screen {
 
     public GameScreen(StormWarn game) {
         this.game = game;
+        this.envController = EnvController.getInstance();
 
         camera = MyCamera.getInstance();
         camera.setToOrtho(false, 1600, 960);
+        camera.setxBound();
+        camera.setyBound();
+        camera.setxPos(0);
+        camera.setyPos(0);
+        camera.setzPos(0);
+        camera.setZoom(1f);
 
         radar = new Radar();
         cellWidth = 1;
@@ -55,15 +66,14 @@ public class GameScreen implements Screen {
     public void render(float delta) {
         ScreenUtils.clear(0, 0, 0, 1);
 
-        camera.setXpos(0);
-        camera.setYpos(0);
-        camera.setZpos(0);
-        camera.setZoom(1f);
         camera.update();
 
-        //game logic here
-        drawCircle(249, 0, 5);
+        //GAME LOGIC START
+        radar.setRadar(envController.getParticles());
+        //GAME LOGIC END
 
+
+        // GRAPHICS START
         game.shapeRenderer.setProjectionMatrix(camera.combined);
         //filled in shapes
         game.shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
@@ -77,6 +87,35 @@ public class GameScreen implements Screen {
                 0,
                 (radar.getDistance() * cellHeight) + deadZoneOffset);
         game.shapeRenderer.end();
+        // GRAPHICS END
+
+        // KEY BINDS START
+        // ---------------
+        // LEFT
+        if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
+            camera.moveXPos(-20);
+        }
+        // RIGHT
+        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
+            camera.moveXPos(20);
+        }
+        // UP
+        if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
+            camera.moveYPos(20);
+        }
+        // DOWN
+        if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
+            camera.moveYPos(-20);
+        }
+        // =
+        if (Gdx.input.isKeyPressed(Input.Keys.EQUALS)) {
+            camera.moveZoom(-0.1f);
+        }
+        // -
+        if (Gdx.input.isKeyPressed(Input.Keys.MINUS)) {
+            camera.moveZoom(0.1f);
+        }
+        // KEY BINDS END
 
     }
 
@@ -105,20 +144,6 @@ public class GameScreen implements Screen {
         game.batch.dispose();
         game.shapeRenderer.dispose();
         game.font.dispose();
-    }
-
-
-    private void populateCellsRandomly() {
-        Random rand = new Random();
-        for(int i = 0; i < radarCells.length; i++) {
-            for (int j = 0; j < radarCells[i].length; j++) {
-                radarCells[i][j].setReflectivity(rand.nextInt(12));
-            }
-        }
-    }
-
-    private void drawCircle(float xc, float yc, float r) {
-        radar.detectCircle(xc, yc, r);
     }
 
 
@@ -218,6 +243,15 @@ public class GameScreen implements Screen {
             }
             default: {
                 return Color.BLACK;
+            }
+        }
+    }
+
+    private void populateCellsRandomly() {
+        Random rand = new Random();
+        for(int i = 0; i < radarCells.length; i++) {
+            for (int j = 0; j < radarCells[i].length; j++) {
+                radarCells[i][j].setReflectivity(rand.nextInt(12));
             }
         }
     }

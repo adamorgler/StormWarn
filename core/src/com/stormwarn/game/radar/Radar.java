@@ -1,6 +1,7 @@
 package com.stormwarn.game.radar;
 
-import com.badlogic.gdx.utils.Queue;
+import com.badlogic.gdx.scenes.scene2d.ui.List;
+import com.stormwarn.game.storm.partitions.particles.Particle;
 import com.stormwarn.game.storm.partitions.particles.Precipitation;
 
 import java.util.ArrayList;
@@ -41,6 +42,14 @@ public class Radar {
         this.radarCells = radarCells;
     }
 
+    public void setRadar(ArrayList<Particle> particleList) {
+        if (particleList != null) {
+            for (Particle p : particleList) {
+                detectParticle(p);
+            }
+        }
+    }
+
     public int getDistance() {
         return d;
     }
@@ -69,7 +78,7 @@ public class Radar {
         return r * d;
     }
 
-    public void detectPrecipitation(Precipitation p) {
+    public void detectParticle(Particle p) {
         float x = p.getxPos();
         float y = p.getyPos();
         float vx = p.getVx();
@@ -79,16 +88,18 @@ public class Radar {
         int dPos = (int) getDPos(x, y);
 
         if (checkBounds(rPos, dPos)) {
-            RadarCell rc = radarCells[rPos][dPos];
-            rc.setReflectivity(p.getReflectivity());
-            rc.setVelocity(observedVelocity(x, y, vx, vy));
+            if (p instanceof Precipitation) {
+                RadarCell rc = radarCells[rPos][dPos];
+                rc.setReflectivity(((Precipitation) p).getReflectivity());
+                rc.setVelocity((int) observedVelocity(x, y, vx, vy));
+            }
         }
     }
 
-    private int observedVelocity(float x, float y, float vx, float vy) {
-
-
-        return 0;
+    // returns relative velocity of particle moving directly away/towards radar
+    private float observedVelocity(float x, float y, float vx, float vy) {
+        float vd = ((x * vx) + (y * vy)) / getDPos(x, y);
+        return vd;
     }
 
     private void initRadar() {

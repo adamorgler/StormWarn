@@ -12,6 +12,7 @@ import com.stormwarn.game.graphics.MyCamera;
 import com.stormwarn.game.main.StormWarn;
 import com.stormwarn.game.radar.Radar;
 import com.stormwarn.game.radar.RadarCell;
+import com.stormwarn.game.storm.partitions.particles.Precipitation;
 
 import java.util.Random;
 
@@ -27,13 +28,11 @@ public class GameScreen implements Screen {
 
     private RadarCell[][] radarCells;
 
-    private PolygonRegion[][] radarPolygons;
-
     private int cellWidth;
 
     private int cellHeight;
 
-    private int deadZoneOffset;
+    private int deadZoneRadius;
 
     public GameScreen(StormWarn game) {
         this.game = game;
@@ -51,10 +50,13 @@ public class GameScreen implements Screen {
         radar = new Radar();
         cellWidth = 1;
         cellHeight = 2;
-        deadZoneOffset = 5 * cellHeight;
+        deadZoneRadius = 7;
 
+
+        // GAME LOGIC INIT
+
+        radar.setRadar(envController.getParticles());
         radarCells = radar.getRadarCells();
-        radarPolygons = new PolygonRegion[radar.getRadialAmount()][radar.getDistance()];
     }
 
     @Override
@@ -69,7 +71,7 @@ public class GameScreen implements Screen {
         camera.update();
 
         //GAME LOGIC START
-        radar.setRadar(envController.getParticles());
+
         //GAME LOGIC END
 
 
@@ -78,6 +80,8 @@ public class GameScreen implements Screen {
         //filled in shapes
         game.shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
         drawRadar();
+        game.shapeRenderer.setColor(Color.BLACK);
+        game.shapeRenderer.circle(0,0, deadZoneRadius * cellHeight);
         game.shapeRenderer.end();
 
         //outlines
@@ -85,7 +89,7 @@ public class GameScreen implements Screen {
         game.shapeRenderer.setColor(Color.LIGHT_GRAY);
         game.shapeRenderer.circle(0,
                 0,
-                (radar.getDistance() * cellHeight) + deadZoneOffset);
+                radar.getDistance() * cellHeight);
         game.shapeRenderer.end();
         // GRAPHICS END
 
@@ -151,8 +155,8 @@ public class GameScreen implements Screen {
         for (int i = 0; i < radarCells.length; i++) {
             for (int j = 0; j < radarCells[i].length; j++) {
                 int r = radarCells[i][j].getReflectivity();
-                int rpos = i;
-                int dpos = (j * cellHeight) + deadZoneOffset;
+                int rpos = i + 180;
+                int dpos = (j * cellHeight);
 
                 float xpos = (float) getXPos(rpos, dpos);
                 float ypos = (float) getYPos(rpos, dpos);
@@ -249,10 +253,12 @@ public class GameScreen implements Screen {
 
     private void populateCellsRandomly() {
         Random rand = new Random();
-        for(int i = 0; i < radarCells.length; i++) {
-            for (int j = 0; j < radarCells[i].length; j++) {
-                radarCells[i][j].setReflectivity(rand.nextInt(12));
-            }
+        for (int i = 0; i < 100000; i++) {
+            int x = rand.nextInt(500) - 250;
+            int y = rand.nextInt(500) - 250;
+            Precipitation p = new Precipitation(x, y, 0, 0);
+            p.setReflectivity(rand.nextInt(12));
+            envController.addParticle(p);
         }
     }
 }

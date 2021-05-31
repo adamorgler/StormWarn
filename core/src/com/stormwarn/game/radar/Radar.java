@@ -135,7 +135,7 @@ public class Radar {
     }
 
     private float getRPos(float x, float y) {
-        return (float)(Math.atan2(y, x) * (180 / Math.PI));
+        return (float)(Math.atan2(y, x) * (180 / Math.PI) + 180);
     }
 
     private float getDPos(float x, float y) {

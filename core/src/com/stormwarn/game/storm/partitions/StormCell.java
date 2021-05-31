@@ -1,18 +1,22 @@
 package com.stormwarn.game.storm.partitions;
 
+import java.util.ArrayList;
+
 public class StormCell {
 
     private final int id;
 
     private int strength;
 
-    private int xpos;
+    private float xpos;
 
-    private int ypos;
+    private float ypos;
 
-    private double speed;
+    private float vx;
 
-    private double direction;
+    private float vy;
+
+    private ArrayList<StormPartition> parts;
 
     public StormCell(int id) {
         this.id = id;
@@ -30,35 +34,43 @@ public class StormCell {
         this.strength = strength;
     }
 
-    public int getXpos() {
+    public float getXpos() {
         return xpos;
     }
 
-    public void setXpos(int xpos) {
+    public void setXpos(float xpos) {
         this.xpos = xpos;
     }
 
-    public int getYpos() {
+    public float getYpos() {
         return ypos;
     }
 
-    public void setYpos(int ypos) {
+    public void setYpos(float ypos) {
         this.ypos = ypos;
     }
 
-    public double getSpeed() {
-        return speed;
+    public float getVx() {
+        return vx;
     }
 
-    public void setSpeed(double speed) {
-        this.speed = speed;
+    public void setVx(float vx) {
+        this.vx = vx;
     }
 
-    public double getDirection() {
-        return direction;
+    public float getVy() {
+        return vy;
     }
 
-    public void setDirection(double direction) {
-        this.direction = direction;
+    public void setVy(float vy) {
+        this.vy = vy;
+    }
+
+    public ArrayList<StormPartition> getParts() {
+        return parts;
+    }
+
+    public void setParts(ArrayList<StormPartition> parts) {
+        this.parts = parts;
     }
 }

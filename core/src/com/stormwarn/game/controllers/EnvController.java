@@ -30,8 +30,13 @@ public class EnvController {
         return instance;
     }
 
-    public void genCell() {
+    public void genCell(float x, float y, float vx, float vy) {
         StormCell s = new StormCell(cells.size());
+        s.setStrength(1);
+        s.setXpos(x);
+        s.setYpos(y);
+        s.setVx(vx);
+        s.setVy(vy);
         cells.add(s);
     }
 
@@ -45,6 +50,12 @@ public class EnvController {
 
     public void addParticle(Particle p) {
         this.particles.add(p);
+    }
+
+    public void spawnParticles() {
+        for(StormCell sc : cells) {
+
+        }
     }
 
     public void clearParticles() {

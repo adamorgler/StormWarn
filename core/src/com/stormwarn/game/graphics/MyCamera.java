@@ -26,7 +26,7 @@ public class MyCamera extends OrthographicCamera {
         this.yPos = 0f;
         this.zPos = 0f;
         this.zoomLowerBound = 0.1f;
-        this.zoomUpperBound = 2f;
+        this.zoomUpperBound = 1.2f;
 
         this.position.set(xPos, yPos, zPos);
     }

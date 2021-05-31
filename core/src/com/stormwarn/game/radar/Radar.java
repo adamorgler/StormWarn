@@ -23,15 +23,13 @@ public class Radar {
     public Radar() {
         this.d = 250;
         this.r = 360;
-        this.radarCells = new RadarCell[r][d];
-        initRadar();
+        clearRadar();
     }
 
     public Radar(int d) {
         this.d = d;
         this.r = 360;
-        this.radarCells = new RadarCell[r][d];
-        initRadar();
+        clearRadar();
     }
 
     public RadarCell[][] getRadarCells() {
@@ -94,6 +92,11 @@ public class Radar {
                 rc.setVelocity((int) observedVelocity(x, y, vx, vy));
             }
         }
+    }
+
+    public void clearRadar() {
+        radarCells = new RadarCell[r][d];
+        initRadar();
     }
 
     // returns relative velocity of particle moving directly away/towards radar

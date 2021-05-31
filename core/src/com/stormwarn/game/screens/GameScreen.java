@@ -4,7 +4,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.*;
-import com.badlogic.gdx.graphics.g2d.PolygonRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.stormwarn.game.controllers.EnvController;
@@ -34,6 +33,8 @@ public class GameScreen implements Screen {
 
     private int deadZoneRadius;
 
+    private int layerView;
+
     public GameScreen(StormWarn game) {
         this.game = game;
         this.envController = EnvController.getInstance();
@@ -51,12 +52,11 @@ public class GameScreen implements Screen {
         cellWidth = 1;
         cellHeight = 2;
         deadZoneRadius = 7;
+        layerView = 1;
 
 
         // GAME LOGIC INIT
-
         radar.setRadar(envController.getParticles());
-        radarCells = radar.getRadarCells();
     }
 
     @Override
@@ -71,9 +71,15 @@ public class GameScreen implements Screen {
         camera.update();
 
         //GAME LOGIC START
-
+        radar.clearRadar();
+        envController.clearParticles();
+        envController.genParticlesInCircle(-50, 50, 20, 10);
+        envController.genParticlesInCircle(50, 50, 20, 7);
+        envController.genParticlesInCircle(50, -50, 20, 4);
+        envController.genParticlesInCircle(-50, -50, 20, 1);
+        envController.genParticlesInCircle(0, 0, 40, 5);
+        radar.setRadar(envController.getParticles());
         //GAME LOGIC END
-
 
         // GRAPHICS START
         game.shapeRenderer.setProjectionMatrix(camera.combined);
@@ -91,6 +97,11 @@ public class GameScreen implements Screen {
                 0,
                 radar.getDistance() * cellHeight);
         game.shapeRenderer.end();
+
+        //text
+        game.batch.begin();
+        game.font.draw(game.batch, "Layer " + Integer.toString(layerView), 50, 50);
+        game.batch.end();
         // GRAPHICS END
 
         // KEY BINDS START
@@ -150,8 +161,8 @@ public class GameScreen implements Screen {
         game.font.dispose();
     }
 
-
     private void drawRadar() {
+        radarCells = radar.getRadarCells();
         for (int i = 0; i < radarCells.length; i++) {
             for (int j = 0; j < radarCells[i].length; j++) {
                 int r = radarCells[i][j].getReflectivity();
@@ -259,6 +270,22 @@ public class GameScreen implements Screen {
             Precipitation p = new Precipitation(x, y, 0, 0);
             p.setReflectivity(rand.nextInt(12));
             envController.addParticle(p);
+        }
+    }
+
+    private void upLayerView() {
+        layerView++;
+    }
+
+    private void downLayerView() {
+        layerView--;
+    }
+
+    private void checkLayerBounds() {
+        if (layerView > 15) {
+            layerView = 15;
+        } else if (layerView < 1) {
+            layerView = 1;
         }
     }
 }
